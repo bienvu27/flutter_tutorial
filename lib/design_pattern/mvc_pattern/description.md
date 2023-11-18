@@ -43,3 +43,5 @@
 
 
 ## => Kết luật: Dễ triển khai dễ đọc hiểu phù hợp với các dự án nhỏ có độ phức tạp thấp.
+
+## package support: mvc_pattern, momentum
