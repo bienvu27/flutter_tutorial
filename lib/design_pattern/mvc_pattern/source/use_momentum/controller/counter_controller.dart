@@ -25,3 +25,17 @@ class CounterController extends MomentumController<CounterModel> {
     debugPrint("${model.value}");
   }
 }
+
+/*
+Có một cách ngắn gọn hơn để gọi hàm từ Momentum controller trong Flutter.
+Đó là sử dụng một phương thức mở rộng (extension method)
+hoặc sử dụng hàm toàn cục.
+*/
+
+// extension CounterControllerExtensions on MomentumController {
+//   void incrementCounter() {
+//     // Thực hiện công việc cần thiết khi tăng counter
+//     // Ví dụ: this.controller<CounterController>().increment();
+//   }
+// }
+// use: context.incrementCounter();
