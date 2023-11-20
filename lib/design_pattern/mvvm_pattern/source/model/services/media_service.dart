@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_tutorial/design_pattern/mvvm_pattern/source/model/api/app_exception.dart';
 import 'package:flutter_tutorial/design_pattern/mvvm_pattern/source/model/services/base_service.dart';
-import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 class MediaService extends BaseService {
@@ -10,7 +10,7 @@ class MediaService extends BaseService {
   Future getResponse(String url) async {
     dynamic responseJson;
     try {
-      final response = await http.get(Uri.parse(mediaBaseUrl + url));
+      final response = await http.get(Uri.parse("$mediaBaseUrl$url"));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');
