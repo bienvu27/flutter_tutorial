@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tutorial/state_management/bloc/source/lib/features/cart/ui/cart.dart';
 import 'package:flutter_tutorial/state_management/bloc/source/lib/features/home/bloc/home_bloc.dart';
 import 'package:flutter_tutorial/state_management/bloc/source/lib/features/wishlist/ui/wishlist.dart';
+
+import 'product_tile_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,27 +32,35 @@ class _HomeState extends State<Home> {
       listener: (context, state) {
         if (state is HomeNavigateToCartPageActionState) {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const Card()));
+              context, MaterialPageRoute(builder: (context) => const Cart()));
         } else if (state is HomeNavigateToWishlistPageActionState) {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const Wishlist()));
+        } else if (state is HomeProductItemCartedActionState) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Item Carted')));
+        } else if (state is HomeProductItemWishlistedActionState) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('Item Wishlisted')));
         }
       },
       builder: (context, state) {
         switch (state.runtimeType) {
           case HomeLoadingState:
             return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+                body: Center(
+              child: CircularProgressIndicator(),
+            ));
           case HomeLoadedSuccessState:
+            final successState = state as HomeLoadedSuccessState;
             return Scaffold(
               appBar: AppBar(
-                title: const Text("Grocery App"),
                 backgroundColor: Colors.teal,
+                title: const Text('Akshit Grocery App'),
                 actions: [
                   IconButton(
                       onPressed: () {
-                        homeBloc.add(HomeWishlistProductButtonNavigateEvent());
+                        homeBloc.add(HomeWishlistButtonNavigateEvent());
                       },
                       icon: const Icon(Icons.favorite_border)),
                   IconButton(
@@ -58,16 +70,19 @@ class _HomeState extends State<Home> {
                       icon: const Icon(Icons.shopping_bag_outlined)),
                 ],
               ),
+              body: ListView.builder(
+                  itemCount: successState.products.length,
+                  itemBuilder: (context, index) {
+                    return ProductTileWidget(
+                        homeBloc: homeBloc,
+                        productDataModel: successState.products[index]);
+                  }),
             );
 
           case HomeErrorState:
-            return const Scaffold(
-              body: Center(
-                child: Text("Error"),
-              ),
-            );
+            return const Scaffold(body: Center(child: Text('Error')));
           default:
-            return const SizedBox.shrink();
+            return const SizedBox();
         }
       },
     );
